@@ -114,7 +114,7 @@ unescape x =
       replace (unsafeRegex "\\-" global) "+"
         >>> replace (unsafeRegex "_" global) "/"
 
--- | Encode to JWT
+-- | Encode to JWT.
 encode :: forall payload. WriteForeign payload => Secret -> Algorithm -> payload -> Effect Jwt
 encode secret alg payload = do
   headerSegment <- base64URLEncode $ writeJSON { typ: "JWT", alg: show alg }
