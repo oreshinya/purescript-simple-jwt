@@ -6,7 +6,7 @@ import Data.Either (Either(..))
 import Effect (Effect)
 import Effect.Class (liftEffect)
 import Node.Simple.Jwt (Algorithm(..), Jwt(..), JwtError(..), decode, encode)
-import Test.Unit (failure, suite, test)
+import Test.Unit (suite, test)
 import Test.Unit.Assert as Assert
 import Test.Unit.Main (runTest)
 
@@ -27,10 +27,7 @@ main = runTest do
     suite "HS256" do
       test "success" do
         payloadOrErr <- liftEffect $ decode secret jwtByHS256
-        case payloadOrErr of
-          Right (payload' :: Payload) ->
-            Assert.equal payload payload'
-          _ -> failure "Something went wrong."
+        Assert.equal (Right payload) payloadOrErr
       test "invalid token" do
         (payloadOrErr :: Either JwtError Payload) <- liftEffect $ decode secret (Jwt "fjaie.afeoafe.cadiwo.ofwo")
         Assert.equal (Left InvalidTokenError) payloadOrErr
@@ -43,10 +40,7 @@ main = runTest do
     suite "HS512" do
       test "success" do
         payloadOrErr <- liftEffect $ decode secret jwtByHS512
-        case payloadOrErr of
-          Right (payload' :: Payload) ->
-            Assert.equal payload payload'
-          _ -> failure "Something went wrong."
+        Assert.equal (Right payload) payloadOrErr
       test "invalid token" do
         (payloadOrErr :: Either JwtError Payload) <- liftEffect $ decode secret (Jwt "fjaie.afeoafe.cadiwo.ofwo")
         Assert.equal (Left InvalidTokenError) payloadOrErr
