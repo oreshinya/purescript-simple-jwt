@@ -25,7 +25,7 @@
   ],
   "dependencies": {
     "purescript-crypto": "^2.0.0",
-    "purescript-simple-json": "^6.0.0",
+    "purescript-simple-json": "^7.0.0",
     "purescript-strings": "^4.0.1"
   },
   "devDependencies": {
