@@ -17,7 +17,7 @@ import Data.String.Regex (replace)
 import Data.String.Regex.Flags (global)
 import Data.String.Regex.Unsafe (unsafeRegex)
 import Effect (Effect)
-import Node.Buffer (fromString, toString)
+import Node.Buffer (Buffer, fromString, toString)
 import Node.Crypto.Hash as Hash
 import Node.Crypto.Hmac as Hmac
 import Node.Encoding (Encoding(..))
@@ -103,7 +103,7 @@ algorithmFromString alg
 
 base64URLDecode :: String -> Effect String
 base64URLDecode x =
-  fromString (unescape x) Base64 >>= toString UTF8
+  (fromString (unescape x) Base64 :: Effect Buffer) >>= toString UTF8
 
 unescape :: String -> String
 unescape x =
@@ -128,7 +128,7 @@ sign secret alg input =
 
 base64URLEncode :: String -> Effect String
 base64URLEncode x =
-  escape <$> (fromString x UTF8 >>= toString Base64)
+  escape <$> ((fromString x UTF8 :: Effect Buffer) >>= toString Base64)
 
 escape :: String -> String
 escape =
