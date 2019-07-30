@@ -30,7 +30,7 @@ newtype Jwt = Jwt String
 
 derive newtype instance showJwt :: Show Jwt
 derive newtype instance eqJwt :: Eq Jwt
-derive newtype instance readForeingJwt :: ReadForeign Jwt
+derive newtype instance readForeignJwt :: ReadForeign Jwt
 derive newtype instance writeForeignJwt :: WriteForeign Jwt
 
 -- | Supported algorithms.
