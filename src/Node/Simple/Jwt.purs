@@ -1,8 +1,10 @@
 module Node.Simple.Jwt
   ( Secret
-  , Jwt(..)
+  , Jwt
   , Algorithm(..)
   , JwtError(..)
+  , fromString
+  , toString
   , decode
   , encode
   ) where
@@ -17,7 +19,8 @@ import Data.String.Regex (replace)
 import Data.String.Regex.Flags (global)
 import Data.String.Regex.Unsafe (unsafeRegex)
 import Effect (Effect)
-import Node.Buffer (Buffer, fromString, toString)
+import Node.Buffer (Buffer)
+import Node.Buffer as Buffer
 import Node.Crypto.Hash as Hash
 import Node.Crypto.Hmac as Hmac
 import Node.Encoding (Encoding(..))
@@ -58,6 +61,14 @@ instance showJwtError :: Show JwtError where
   show VerifyError = "VerifyError"
 
 derive instance eqJwtError :: Eq JwtError
+
+-- | Convert a `String` to a `Jwt`.
+fromString :: String -> Jwt
+fromString = Jwt
+
+-- | Convert a `Jwt` to a `String`.
+toString :: Jwt -> String
+toString (Jwt x) = x
 
 -- | Decode JWT with signature verification.
 decode :: forall payload. ReadForeign payload => Secret -> Jwt -> Effect (Either JwtError payload)
@@ -104,7 +115,7 @@ algorithmFromString alg
 
 base64URLDecode :: String -> Effect String
 base64URLDecode x =
-  (fromString (unescape x) Base64 :: Effect Buffer) >>= toString UTF8
+  (Buffer.fromString (unescape x) Base64 :: Effect Buffer) >>= Buffer.toString UTF8
 
 unescape :: String -> String
 unescape x =
@@ -129,7 +140,7 @@ sign secret alg input =
 
 base64URLEncode :: String -> Effect String
 base64URLEncode x =
-  escape <$> ((fromString x UTF8 :: Effect Buffer) >>= toString Base64)
+  escape <$> ((Buffer.fromString x UTF8 :: Effect Buffer) >>= Buffer.toString Base64)
 
 escape :: String -> String
 escape =
