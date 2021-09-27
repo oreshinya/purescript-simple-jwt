@@ -24,7 +24,7 @@
     "output"
   ],
   "dependencies": {
-    "purescript-crypto": "^3.0.0",
+    "purescript-crypto": "^4.0.0",
     "purescript-simple-json": "^8.0.0",
     "purescript-strings": "^5.0.0"
   },

@@ -21,7 +21,6 @@ import Data.String.Regex.Unsafe (unsafeRegex)
 import Effect (Effect)
 import Node.Buffer (Buffer)
 import Node.Buffer as Buffer
-import Node.Crypto.Hash as Hash
 import Node.Crypto.Hmac as Hmac
 import Node.Encoding (Encoding(..))
 import Simple.JSON (class ReadForeign, class WriteForeign, readJSON, writeJSON)
@@ -135,8 +134,11 @@ encode secret alg payload = do
   pure $ Jwt $ headerSegment <> "." <> payloadSegment <> "." <> signatureSegment
 
 sign :: Secret -> Algorithm -> String -> Effect String
-sign secret alg input =
-  escape <$> Hmac.base64 (convertAlgorithm alg) secret input
+sign secret alg input = do
+  sec <- Buffer.fromString secret UTF8
+  inp <- Buffer.fromString input UTF8
+  result <- Hmac.createHmac (convertAlgorithm alg) sec >>= Hmac.update inp >>= Hmac.digest >>= Buffer.toString Base64
+  pure $ escape result
 
 base64URLEncode :: String -> Effect String
 base64URLEncode x =
@@ -148,6 +150,6 @@ escape =
     >>> replace (unsafeRegex "\\/" global) "_"
     >>> replace (unsafeRegex "=" global) ""
 
-convertAlgorithm :: Algorithm -> Hash.Algorithm
-convertAlgorithm HS256 = Hash.SHA256
-convertAlgorithm HS512 = Hash.SHA512
+convertAlgorithm :: Algorithm -> String
+convertAlgorithm HS256 = "sha256"
+convertAlgorithm HS512 = "sha512"
