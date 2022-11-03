@@ -24,11 +24,11 @@
     "output"
   ],
   "dependencies": {
-    "purescript-crypto": "^4.0.0",
-    "purescript-simple-json": "^8.0.0",
-    "purescript-strings": "^5.0.0"
+    "purescript-crypto": "^5.0.0",
+    "purescript-simple-json": "^9.0.0",
+    "purescript-strings": "^6.0.1"
   },
   "devDependencies": {
-    "purescript-test-unit": "^16.0.0"
+    "purescript-test-unit": "^17.0.0"
   }
 }
